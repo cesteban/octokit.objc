@@ -16,8 +16,9 @@
 
 - (RACSignal *)fetchUserEventsNotMatchingEtag:(NSString *)etag {
 	if (self.user == nil) return [RACSignal error:self.class.userRequiredError];
-
-	NSURLRequest *request = [self requestWithMethod:@"GET" path:[NSString stringWithFormat:@"users/%@/received_events", self.user.login] parameters:nil notMatchingEtag:etag];
+	
+	NSString *path = [NSString stringWithFormat:@"users/%@/received_events", self.user.login ? : self.user.rawLogin];
+	NSURLRequest *request = [self requestWithMethod:@"GET" path:path parameters:nil notMatchingEtag:etag];
 	
 	return [self enqueueRequest:request resultClass:OCTEvent.class fetchAllPages:NO];
 }
